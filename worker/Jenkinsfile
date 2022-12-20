@@ -5,10 +5,13 @@ pipeline {
     }
     stages {
         stage('build') {
+<<<<<<< HEAD
             /* when{
             changeset "**/worker/**"
             } */
 
+=======
+>>>>>>> 28a09344d44353c7c1ecf383a6636f6dcb7edede
             steps {
                 echo 'Compiling worker app'
                 dir('worker') {
@@ -27,15 +30,27 @@ pipeline {
         stage('package') {
             steps {
                 echo 'Packaging worker app'
+<<<<<<< HEAD
                 dir('worker') {
                     // sh 'mvn package'
                     sh 'mvn package -DskipTests'
                 }
+=======
+                dir('worker'){
+                    // sh 'mvn package'
+                    sh 'mvn package -DskipTests'
+                }
+
+>>>>>>> 28a09344d44353c7c1ecf383a6636f6dcb7edede
             }
         }
     }
     post {
+<<<<<<< HEAD
         always {
+=======
+        always{
+>>>>>>> 28a09344d44353c7c1ecf383a6636f6dcb7edede
             archiveArtifacts artifacts: '**/target/*.jar', fingerprint:true
             echo 'Building multibranch pipeline for worker is completed..'
         }
