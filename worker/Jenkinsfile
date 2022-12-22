@@ -1,4 +1,5 @@
 pipeline {
+
     agent none
    
     stages {
@@ -12,7 +13,7 @@ pipeline {
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }
-            
+
             steps {
                 echo 'building worker app'
                 dir('worker') {
@@ -21,6 +22,7 @@ pipeline {
             }
         }
         stage('test') {
+
             when{
                 changeset "**/worker/**"
             }
@@ -30,6 +32,7 @@ pipeline {
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }   
+
             steps {
                 echo 'Running Unit Tests on worker app'
                 dir('worker') {
@@ -38,6 +41,7 @@ pipeline {
             }
         }
         stage('package') {
+
             when{
                 branch 'master'
                 changeset "**/worker/**"
@@ -48,12 +52,14 @@ pipeline {
                     args '-v $HOME/.m2:/root/.m2'
                 }
             }
+
             steps {
                 echo 'Packaging worker app'
                 dir('worker'){
                     // sh 'mvn package'
                     sh 'mvn package -DskipTests'
                     archiveArtifacts artifacts: '**/target/*.jar', fingerprint:true
+
                 }
 
             }
@@ -73,6 +79,7 @@ pipeline {
                                 workerImage.push("latest")
                     }
 
+
                 }
 
             }
@@ -83,6 +90,7 @@ pipeline {
         always{
             
             echo 'Building pipeline job is completed..'
+
         }
     }
 }
