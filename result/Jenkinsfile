@@ -28,8 +28,9 @@ pipeline {
                 }
             }
         }
+
        /*  stage('package') {
-            steps {
+               steps {
                 echo 'Packaging worker app'
                 dir('worker'){
                     // sh 'mvn package'
@@ -37,7 +38,9 @@ pipeline {
                 }
 
             }
+
         } */
+
     }
     post{
       always{
