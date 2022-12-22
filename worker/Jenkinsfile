@@ -28,9 +28,9 @@ pipeline {
             }
         }
         stage('package') {
-            when{
-                changeset "**/worker/**"
-            }
+            //when{
+                //changeset "**/worker/**"
+            //}
             steps {
                 echo 'Packaging worker app'
                 dir('worker'){
