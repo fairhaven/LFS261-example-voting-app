@@ -31,6 +31,11 @@ pipeline {
             }
         }
         stage('package') {
+
+            //when{
+                //changeset "**/worker/**"
+            //}
+
             steps {
                 echo 'Packaging worker app'
                 dir('worker'){
@@ -44,8 +49,10 @@ pipeline {
     }
     post {
         always{
+
             
             echo 'The job is is completed..'
+
         }
     }
 }
