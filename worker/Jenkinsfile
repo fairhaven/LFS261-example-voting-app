@@ -1,25 +1,28 @@
 pipeline {
-    agent any
-    tools {
-        maven 'maven 3.6.1'
+    agent{
+        docker{
+            image 'maven:3.6.1-jdk-8-slim'
+            args '-v $HOME/.m2:/root/.m2'
+        }
+        
     }
     stages {
         stage('build') {
-            when{
-                changeset "**/worker/**"
-            }
+            //when{
+                // changeset "**/worker/**"
+            //}
             
             steps {
-                echo 'Compiling worker app'
+                echo 'building worker app'
                 dir('worker') {
                     sh 'mvn compile'
                 }
             }
         }
         stage('test') {
-            when{
-                changeset "**/worker/**"
-            }
+            /* when{
+                changeset "**///worker/**"
+            //} */
             steps {
                 echo 'Running Unit Tests on worker app'
                 dir('worker') {
@@ -28,23 +31,37 @@ pipeline {
             }
         }
         stage('package') {
-            when{
-                changeset "**/worker/**"
-            }
             steps {
                 echo 'Packaging worker app'
                 dir('worker'){
                     // sh 'mvn package'
                     sh 'mvn package -DskipTests'
+                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint:true
                 }
 
             }
         }
+        stage('docker-package'){
+            agent any
+            steps{
+                echo 'Packaging worker app with docker'
+                script{
+                    docker.withRegistry('https://index.docker.io/v1/','dockerlogin') { def workerImage = 
+                    docker.build("seyibright/worker:v${env.BUILD_ID}", "./ worker")
+                                workerImage.push()
+                                workerImage.push("latest")
+                    }
+
+                }
+
+            }
+        }
+
     }
     post {
         always{
-            // archiveArtifacts artifacts: '**/target/*.jar', fingerprint:true
-            echo 'Building multibranch pipeline for worker is completed..'
+            
+            echo 'The job is is completed..'
         }
     }
 }
