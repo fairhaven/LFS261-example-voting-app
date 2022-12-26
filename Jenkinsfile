@@ -198,11 +198,11 @@ pipeline {
                 echo 'Packaging vote app with docker'
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
-                    // ./vote is the path to the Dockerfile that Jenkins will find from the Github repo
-                    def voteImage = docker.build("seyibright/vote:${env.GIT_COMMIT}", "./vote")
-                    voteImage.push()
-                    voteImage.push("${env.BRANCH_NAME}")
-                    voteImage.push("latest")
+                        // ./vote is the path to the Dockerfile that Jenkins will find from the Github repo
+                        def voteImage = docker.build("seyibright/vote:${env.GIT_COMMIT}", "./vote")
+                        voteImage.push()
+                        voteImage.push("${env.BRANCH_NAME}")
+                        voteImage.push("latest")
                     }
                 }
 
@@ -224,17 +224,17 @@ pipeline {
                 echo 'Running Sonarqube Analysis..'
                 withSonarQubeEnv('sonar-instavote') {
                     sh "${sonarpath}/bin/sonar-scanner -Dproject.settings=sonar-project.properties -Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=86400"
-            }
+            }   }
         }
     
         stage("Quality Gate") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
-                // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-                // true = set pipeline to UNSTABLE, false = don't
-                waitForQualityGate abortPipeline: true
-            }
-        }
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
+                }
+        }   }
     
         stage('deploy to dev') {
             agent any
