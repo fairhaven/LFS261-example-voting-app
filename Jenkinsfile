@@ -192,7 +192,7 @@ pipeline {
                 } 
             } 
         } 
-        stage('vote-docker-package') {
+       /*  stage('vote-docker-package') {
             agent any
             steps {
                 echo 'Packaging vote app with docker'
@@ -208,7 +208,7 @@ pipeline {
 
             }
 
-        }
+        } */
         stage('Sonarqube') {
             agent any
             when{
