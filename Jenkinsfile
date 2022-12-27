@@ -209,7 +209,7 @@ pipeline {
             }
 
         }
-        stage('Sonarqube') {
+        /* stage('Sonarqube') {
             agent any
             when{
                 branch 'master'
@@ -225,16 +225,16 @@ pipeline {
                 withSonarQubeEnv('sonar-instavote') {
                     sh "${sonarpath}/bin/sonar-scanner -Dproject.settings=sonar-project.properties -Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=86400"
             }   }
-        }
+        } */
     
-        stage("Quality Gate") {
+        /* stage("Quality Gate") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
                     // true = set pipeline to UNSTABLE, false = don't
                     waitForQualityGate abortPipeline: true
                 }
-        }   }
+        }   } */
     
         stage('deploy to dev') {
             agent any
@@ -246,6 +246,19 @@ pipeline {
                 sh 'docker-compose up -d'
             }
         }
+        stage('Trigger deployment') {
+            agent any
+            environment{
+                def GIT_COMMIT = "${env.GIT_COMMIT}"
+            }
+            steps{
+                echo "${GIT_COMMIT}"
+                echo "triggering deployment"
+                // passing variables to job deployment run by github.com/eeganlf/vote-deploy/blob/master/Jenkinsfile
+                build job: 'deployment', parameters: [string(name: 'DOCKERTAG', value: GIT_COMMIT)]
+            }
+        }
+            
     }
     post {
         always{
