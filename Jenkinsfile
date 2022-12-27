@@ -192,7 +192,7 @@ pipeline {
                 } 
             } 
         } 
-       /*  stage('vote-docker-package') {
+        stage('vote-docker-package') {
             agent any
             steps {
                 echo 'Packaging vote app with docker'
@@ -201,14 +201,14 @@ pipeline {
                     // ./vote is the path to the Dockerfile that Jenkins will find from the Github repo
                     def voteImage = docker.build("seyibright/vote:${env.GIT_COMMIT}", "-f ${Dockerfile} ./vote")
                     voteImage.push()
-                    //voteImage.push("${env.BRANCH_NAME}")
+                    voteImage.push("${env.BRANCH_NAME}")
                     voteImage.push("latest")
                     }
                 }
 
             }
 
-        } */
+        }
         stage('Sonarqube') {
             agent any
             when{
